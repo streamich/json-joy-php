@@ -19,7 +19,7 @@
     },
     "scripts": {
         "test": "vendor/bin/phpunit tests/unit",
-        "cs-fix": "php-cs-fixer fix . -vv || true",
-        "cs-lint": "php-cs-fixer fix --diff --stop-on-violation --verbose --dry-run"
+        "cs-fix": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix . -vv || true",
+        "cs-lint": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --diff --stop-on-violation --verbose --dry-run"
     }
 }
