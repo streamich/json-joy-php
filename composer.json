@@ -1,0 +1,14 @@
+{
+    "name": "streamich/json-joy",
+    "description": "JSON Pointer, JSON Patch and JSON Operation Transformations in native PHP",
+    "type": "library",
+    "require": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "authors": [
+        {
+            "name": "streamich",
+            "email": "streamich@gmail.com"
+        }
+    ]
+}
