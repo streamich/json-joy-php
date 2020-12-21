@@ -4,6 +4,36 @@ namespace JsonJoy\Patch;
 use JsonJoy;
 
 class OpAdd {
+    public static function applyAdd($doc, array $pathTokens, $value) {
+        if (JsonJoy\Pointer::isRoot($pathTokens)) {
+            return JsonJoy\Json::copy($value);
+        }
+        $tokenCount = count($pathTokens);
+        $parentTokens = array_slice($pathTokens, 0, $tokenCount - 1);
+        $lastToken = $pathTokens[$tokenCount - 1];
+        $obj = JsonJoy\Pointer::get($parentTokens, $doc);
+        if (is_object($obj)) {
+            $obj->$lastToken = JsonJoy\Json::copy($value);
+            return $doc;
+        }
+        if (is_array($obj)) {
+            $index = JsonJoy\Pointer::convertArrayIndex($lastToken, count($obj));
+            $valueCopy = JsonJoy\Json::copy($value);
+            array_splice($obj, $index, 0, [$valueCopy]);
+            if ($tokenCount === 1) return $obj;
+            $parentParentTokens = array_slice($pathTokens, 0, $tokenCount - 2);
+            $parentLastToken = $pathTokens[$tokenCount - 2];
+            $parentObj = JsonJoy\Pointer::get($parentParentTokens, $doc);
+            if (is_object($parentObj)) {
+                $parentObj->$parentLastToken = $obj;
+            } else if (is_array($parentObj)) {
+                $parentObj[$parentLastToken] = $obj;
+            }
+            return $doc;
+        }
+        throw new \Exception('NOT_FOUND');
+    }
+
     public string $path;
     public $value;
 
@@ -16,32 +46,6 @@ class OpAdd {
     }
 
     public function apply($doc) {
-        if (JsonJoy\Pointer::isRoot($this->pathTokens)) {
-            return JsonJoy\Json::copy($this->value);
-        }
-        $tokenCount = count($this->pathTokens);
-        $parentTokens = array_slice($this->pathTokens, 0, $tokenCount - 1);
-        $lastToken = $this->pathTokens[$tokenCount - 1];
-        $obj = JsonJoy\Pointer::get($parentTokens, $doc);
-        if (is_object($obj)) {
-            $obj->$lastToken = JsonJoy\Json::copy($this->value);
-            return $doc;
-        }
-        if (is_array($obj)) {
-            $index = JsonJoy\Pointer::convertArrayIndex($lastToken, count($obj));
-            $valueCopy = JsonJoy\Json::copy($this->value);
-            array_splice($obj, $index, 0, [$valueCopy]);
-            if ($tokenCount === 1) return $obj;
-            $parentParentTokens = array_slice($this->pathTokens, 0, $tokenCount - 2);
-            $parentLastToken = $this->pathTokens[$tokenCount - 2];
-            $parentObj = JsonJoy\Pointer::get($parentParentTokens, $doc);
-            if (is_object($parentObj)) {
-                $parentObj->$parentLastToken = $obj;
-            } else if (is_array($parentObj)) {
-                $parentObj[$parentLastToken] = $obj;
-            }
-            return $doc;
-        }
-        throw new \Exception('NOT_FOUND');
+        return OpAdd::applyAdd($doc, $this->pathTokens, $this->value);
     }
 }
