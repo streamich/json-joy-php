@@ -3,6 +3,9 @@ namespace JsonJoy;
 
 use InvalidArgumentException;
 
+const SPECIAL_CHARS = ['~', '/'];
+const SPECIAL_CHARS_ESCAPED = ['~0', '~1'];
+
 class Pointer
 {
     public static function create(string $pointer): Pointer
@@ -19,11 +22,11 @@ class Pointer
     }
 
     public static function escapeReferenceToken(string $token): string {
-      return str_replace(['~', '/'], ['~0', '~1'], $token);
+      return str_replace(SPECIAL_CHARS, SPECIAL_CHARS_ESCAPED, $token);
     }
 
     public static function unescapeReferenceToken(string $token): string {
-      return str_replace(['~0', '~1'], ['~', '/'], $token);
+      return str_replace(SPECIAL_CHARS_ESCAPED, SPECIAL_CHARS, $token);
     }
 
     public array $referenceTokens;
