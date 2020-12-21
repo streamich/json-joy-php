@@ -12,15 +12,16 @@ fclose($f);
 $doc = json_decode($input, false);
 
 if (count($argv) < 2) {
-    echo "JSON Pointer not specified as first CLI parameter.\n";
+    echo "JSON Patch not specified as first CLI parameter.\n";
     exit(1);
 }
-$pointer = $argv[1];
+$patch = $argv[1];
 
 try {
-    $tokens = JsonJoy\Pointer::parse($pointer);
-    $value = JsonJoy\Pointer::get($tokens, $doc);
-    $output = json_encode($value, JSON_PRETTY_PRINT);
+    $operations = json_decode($patch, false);
+    $ops = JsonJoy\Patch::createOps($operations);
+    $result = JsonJoy\Patch::apply($doc, $ops);
+    $output = json_encode($result, JSON_PRETTY_PRINT);
     fwrite(STDOUT, $output . "\n");
 } catch (\Exception $e) {
     fwrite(STDERR, $e->getMessage() . "\n");

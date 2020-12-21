@@ -3,6 +3,14 @@ namespace JsonJoy;
 
 class Patch
 {
+    public static function apply($doc, array $ops) {
+        $docCopy = Json::copy($doc);
+        foreach ($ops as $op) {
+            $docCopy = $op->apply($docCopy);
+        }
+        return $docCopy;
+    }
+
     public static function createOps(array $operations): array
     {
         if (!is_array($operations)) {
