@@ -1,9 +1,6 @@
 <?php
 namespace JsonJoy;
 
-const SPECIAL_CHARS = ['~', '/'];
-const SPECIAL_CHARS_ESCAPED = ['~0', '~1'];
-
 /**
  * Implementation of JSON Pointer RFC6901 (https://tools.ietf.org/html/rfc6901).
  */
@@ -30,12 +27,12 @@ class Pointer
 
     public static function escapeReferenceToken(string $token): string
     {
-        return str_replace(SPECIAL_CHARS, SPECIAL_CHARS_ESCAPED, $token);
+        return str_replace(['~', '/'], ['~0', '~1'], $token);
     }
 
     public static function unescapeReferenceToken(string $token): string
     {
-        return str_replace(SPECIAL_CHARS_ESCAPED, SPECIAL_CHARS, $token);
+        return str_replace(['~1', '~0'], ['/', '~'], $token);
     }
 
     public static function isRoot(array $tokens): bool

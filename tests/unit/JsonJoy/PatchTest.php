@@ -25,4 +25,20 @@ final class PatchTest extends TestCase
             new JsonJoy\Patch\OpTest('/h', 3),
         ], $ops);
     }
+
+    public function testCanApplyASingleTestOperationWithEscapedJsonPointer(): void
+    {
+        $str1 = '{
+            "/": 9,
+            "~1": 10
+        }';
+        $str2 = '[
+            {"op": "test", "path": "/~01", "value": 10}
+        ]';
+        $doc = json_decode($str1, false);
+        $operations = json_decode($str2, false);
+        $ops = JsonJoy\Patch::createOps($operations);
+        $result = JsonJoy\Patch::apply($doc, $ops);
+        $this->assertEquals($doc, $result);
+    }
 }
