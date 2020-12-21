@@ -78,4 +78,60 @@ final class PointerTest extends TestCase
         $str = $pointer->__toString();
         $this->assertEquals('/fo~1o/bar~0/~0', $str);
     }
+
+    public function testGetValueInObject(): void
+    {
+        $str = '{"1": "foo", "2": [1, 2, 3]}';
+        $doc = json_decode($str, false);
+        $ptr = JsonJoy\Pointer::create('/1');
+        $val = $ptr->get($doc);
+        $this->assertEquals("foo", $val);
+        $ptr = JsonJoy\Pointer::create('/2');
+        $val = $ptr->get($doc);
+        $this->assertEquals([1, 2, 3], $val);
+    }
+
+    public function testGetValueInArray(): void
+    {
+        $str = '{"1": "foo", "2": [1, 2, 3]}';
+        $doc = json_decode($str, false);
+        $ptr = JsonJoy\Pointer::create('/2/0');
+        $val = $ptr->get($doc);
+        $this->assertEquals(1, $val);
+        $ptr = JsonJoy\Pointer::create('/2/1');
+        $val = $ptr->get($doc);
+        $this->assertEquals(2, $val);
+        $ptr = JsonJoy\Pointer::create('/2/2');
+        $val = $ptr->get($doc);
+        $this->assertEquals(3, $val);
+    }
+
+    public function testThrowsWhenGettingAtNegativeArrayIndex(): void
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('INVALID_INDEX');
+        $str = '{"1": "foo", "2": [1, 2, 3]}';
+        $doc = json_decode($str, false);
+        $ptr = JsonJoy\Pointer::create('/2/-1');
+        $val = $ptr->get($doc);
+    }
+
+    public function testThrowsWhenGettingElementOutOfArrayBounds(): void
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('INVALID_INDEX');
+        $str = '{"1": "foo", "2": [1, 2, 3]}';
+        $doc = json_decode($str, false);
+        $ptr = JsonJoy\Pointer::create('/2/3');
+        $val = $ptr->get($doc);
+    }
+
+    public function testCanGetDocumentRoot(): void
+    {
+        $str = '{"1": "foo", "2": [1, 2, 3]}';
+        $doc = json_decode($str, false);
+        $ptr = JsonJoy\Pointer::create('');
+        $val = $ptr->get($doc);
+        $this->assertEquals($doc, $val);
+    }
 }
