@@ -4,6 +4,63 @@ use PHPUnit\Framework\TestCase;
 
 final class JsonTest extends TestCase
 {
+    public function testCopyPrimitives(): void
+    {
+        $this->assertEquals("", JsonJoy\Json::copy(""));
+        $this->assertEquals("foo", JsonJoy\Json::copy("foo"));
+        $this->assertEquals(0, JsonJoy\Json::copy(0));
+        $this->assertEquals(123, JsonJoy\Json::copy(123));
+        $this->assertEquals(true, JsonJoy\Json::copy(true));
+        $this->assertEquals(false, JsonJoy\Json::copy(false));
+        $this->assertEquals(null, JsonJoy\Json::copy(null));
+    }
+
+    public function testCopyArrays(): void
+    {
+        $this->assertEquals([], JsonJoy\Json::copy([]));
+        $this->assertEquals([1], JsonJoy\Json::copy([1]));
+        $this->assertEquals(["asdf", 1, true, null], JsonJoy\Json::copy(["asdf", 1, true, null]));
+        $this->assertEquals([["asdf"], 1, [true, "foo", false, []], null], JsonJoy\Json::copy([["asdf"], 1, [true, "foo", false, []], null]));
+    }
+
+    public function testCopyClonesArray(): void
+    {
+        $original = [];
+        $copy = JsonJoy\Json::copy($original);
+        $original[] = 123;
+        $this->assertNotEquals($original, $copy);
+    }
+
+    public function testCopyObjects(): void
+    {
+        $this->assertEquals((object) [
+            'foo' => 'bar',
+        ], JsonJoy\Json::copy((object) [
+            'foo' => 'bar',
+        ]));
+        $this->assertEquals((object) [
+            'foo' => 'bar',
+            'baz' => (object) [
+                'a' => 'b',
+                'c' => [1,2,3],
+            ],
+        ], JsonJoy\Json::copy((object) [
+            'foo' => 'bar',
+            'baz' => (object) [
+                'a' => 'b',
+                'c' => [1,2,3],
+            ],
+        ]));
+    }
+
+    public function testCopyClonesObject(): void
+    {
+        $original = (object) [];
+        $copy = JsonJoy\Json::copy($original);
+        $original->foo = 'bar';
+        $this->assertNotEquals($original, $copy);
+    }
+
     public function testEqualStrings(): void
     {
         $this->assertEquals(true, JsonJoy\Json::equal("", ""));

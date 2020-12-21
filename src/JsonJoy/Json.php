@@ -5,7 +5,21 @@ class Json
 {
     public static function copy($doc)
     {
-
+        if (is_array($doc)) {
+            $arr = [];
+            foreach ($doc as $value) {
+                $arr[] = Json::copy($value);
+            }
+            return $arr;
+        }
+        if (is_object($doc)) {
+            $obj = (object) [];
+            foreach ($doc as $key => $value) {
+                $obj->$key = Json::copy($value);
+            }
+            return $obj;
+        }
+        return $doc;
     }
 
     public static function equal($a, $b): bool
