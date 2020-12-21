@@ -56,4 +56,11 @@ final class PointerTest extends TestCase
         $this->expectExceptionMessage('POINTER_INVALID');
         $result = JsonJoy\Pointer::create('foo/bar');
     }
+
+    public function testDecodesReferenceTokens(): void
+    {
+      $result = JsonJoy\Pointer::create('/fo~1o/bar~0/~0');
+      $expected = new JsonJoy\Pointer(['fo/o', 'bar~', '~']);
+      $this->assertEquals($expected, $result);
+    }
 }

@@ -14,6 +14,7 @@ class Pointer
             throw new InvalidArgumentException('POINTER_INVALID');
         }
         $referenceTokens = explode('/', substr($pointer, 1));
+        $referenceTokens = array_map('JsonJoy\Pointer::unescapeReferenceToken', $referenceTokens);
         return new Pointer($referenceTokens);
     }
 
