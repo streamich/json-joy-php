@@ -4,7 +4,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 $f = fopen('php://stdin', 'r');
 $input = '';
-while($line = fgets( $f )) {
+while ($line = fgets($f)) {
     $input = $input . $line;
 }
 fclose($f);
