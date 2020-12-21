@@ -1,8 +1,6 @@
 <?php
 namespace JsonJoy;
 
-use InvalidArgumentException;
-
 const SPECIAL_CHARS = ['~', '/'];
 const SPECIAL_CHARS_ESCAPED = ['~0', '~1'];
 
@@ -14,7 +12,7 @@ class Pointer
             return new Pointer([]);
         }
         if ($pointer[0] != '/') {
-            throw new InvalidArgumentException('POINTER_INVALID');
+            throw new \InvalidArgumentException('POINTER_INVALID');
         }
         $referenceTokens = explode('/', substr($pointer, 1));
         $referenceTokens = array_map('JsonJoy\Pointer::unescapeReferenceToken', $referenceTokens);
