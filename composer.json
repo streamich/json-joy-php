@@ -18,7 +18,7 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/phpunit --colors=auto --debug tests/unit",
+        "test": "vendor/bin/phpunit --colors=auto tests/unit",
         "cs-fix": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix . -vv || true",
         "cs-lint": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --diff --stop-on-violation --verbose --dry-run"
     }

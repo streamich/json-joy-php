@@ -21,6 +21,10 @@ class Pointer
       return str_replace(['~', '/'], ['~0', '~1'], $token);
     }
 
+    public static function unescapeReferenceToken(string $token): string {
+      return str_replace(['~0', '~1'], ['~', '/'], $token);
+    }
+
     public array $referenceTokens;
 
     public function __construct(array $referenceTokens)

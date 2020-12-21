@@ -4,7 +4,7 @@ use PHPUnit\Framework\TestCase;
 
 final class PointerTest extends TestCase
 {
-    public function testCanSerializeAReferenceToken(): void
+    public function testCanEscapeAReferenceToken(): void
     {
         $result = JsonJoy\Pointer::escapeReferenceToken('asdf');
         $this->assertEquals('asdf', $result);
@@ -18,6 +18,22 @@ final class PointerTest extends TestCase
         $this->assertEquals('~0~1~0~1~1', $result);
         $result = JsonJoy\Pointer::escapeReferenceToken('/a~b~');
         $this->assertEquals('~1a~0b~0', $result);
+    }
+
+    public function testCanUnescapeAReferenceToken(): void
+    {
+        $result = JsonJoy\Pointer::unescapeReferenceToken('asdf');
+        $this->assertEquals('asdf', $result);
+        $result = JsonJoy\Pointer::unescapeReferenceToken('');
+        $this->assertEquals('', $result);
+        $result = JsonJoy\Pointer::unescapeReferenceToken('~1');
+        $this->assertEquals('/', $result);
+        $result = JsonJoy\Pointer::unescapeReferenceToken('~0');
+        $this->assertEquals('~', $result);
+        $result = JsonJoy\Pointer::unescapeReferenceToken('~0~1~0~1~1');
+        $this->assertEquals('~/~//', $result);
+        $result = JsonJoy\Pointer::unescapeReferenceToken('~1a~0b~0');
+        $this->assertEquals('/a~b~', $result);
     }
 
     public function testCanParseARootPointer(): void
