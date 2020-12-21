@@ -32,4 +32,16 @@ class Pointer
     {
         $this->referenceTokens = $referenceTokens;
     }
+
+    public function toString(): string
+    {
+      if (!count($this->referenceTokens)) return '';
+      $referenceTokens = array_map('JsonJoy\Pointer::escapeReferenceToken', $this->referenceTokens);
+      return '/' . implode('/', $referenceTokens);
+    }
+
+    public function __toString(): string
+    {
+      return $this->toString();
+    }
 }
