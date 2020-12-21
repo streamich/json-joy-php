@@ -50,7 +50,8 @@ class Pointer
         return $this->toString();
     }
 
-    public static function convertArrayIndex(string $str, int $maxValue): int {
+    public static function convertArrayIndex(string $str, int $maxValue): int
+    {
         $index = (int)$str;
         if ($index < 0) {
             throw new \Exception('INVALID_INDEX');
@@ -67,13 +68,17 @@ class Pointer
     {
         foreach ($this->referenceTokens as &$token) {
             if (is_object($doc)) {
-                if(!property_exists($doc, $token)) throw new \Exception('NOT_FOUND');
+                if (!property_exists($doc, $token)) {
+                    throw new \Exception('NOT_FOUND');
+                }
                 $doc = $doc->$token;
                 continue;
             }
             if (is_array($doc)) {
                 $index = Pointer::convertArrayIndex($token, count($doc) - 1);
-                if(!array_key_exists($index, $doc)) throw new \Exception('NOT_FOUND');
+                if (!array_key_exists($index, $doc)) {
+                    throw new \Exception('NOT_FOUND');
+                }
                 $doc = $doc[$token];
                 continue;
             }
