@@ -21,12 +21,14 @@ class Pointer
         return new Pointer($referenceTokens);
     }
 
-    public static function escapeReferenceToken(string $token): string {
-      return str_replace(SPECIAL_CHARS, SPECIAL_CHARS_ESCAPED, $token);
+    public static function escapeReferenceToken(string $token): string
+    {
+        return str_replace(SPECIAL_CHARS, SPECIAL_CHARS_ESCAPED, $token);
     }
 
-    public static function unescapeReferenceToken(string $token): string {
-      return str_replace(SPECIAL_CHARS_ESCAPED, SPECIAL_CHARS, $token);
+    public static function unescapeReferenceToken(string $token): string
+    {
+        return str_replace(SPECIAL_CHARS_ESCAPED, SPECIAL_CHARS, $token);
     }
 
     public array $referenceTokens;
@@ -38,13 +40,20 @@ class Pointer
 
     public function toString(): string
     {
-      if (!count($this->referenceTokens)) return '';
-      $referenceTokens = array_map('JsonJoy\Pointer::escapeReferenceToken', $this->referenceTokens);
-      return '/' . implode('/', $referenceTokens);
+        if (!count($this->referenceTokens)) {
+            return '';
+        }
+        $referenceTokens = array_map('JsonJoy\Pointer::escapeReferenceToken', $this->referenceTokens);
+        return '/' . implode('/', $referenceTokens);
     }
 
     public function __toString(): string
     {
-      return $this->toString();
+        return $this->toString();
+    }
+
+    public function get($doc)
+    {
+        return $doc;
     }
 }

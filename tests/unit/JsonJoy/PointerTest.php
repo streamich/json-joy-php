@@ -59,23 +59,23 @@ final class PointerTest extends TestCase
 
     public function testDecodesReferenceTokens(): void
     {
-      $result = JsonJoy\Pointer::create('/fo~1o/bar~0/~0');
-      $expected = new JsonJoy\Pointer(['fo/o', 'bar~', '~']);
-      $this->assertEquals($expected, $result);
+        $result = JsonJoy\Pointer::create('/fo~1o/bar~0/~0');
+        $expected = new JsonJoy\Pointer(['fo/o', 'bar~', '~']);
+        $this->assertEquals($expected, $result);
     }
 
 
     public function testCanEncodeJsonPointerIntoStringForm(): void
     {
-      $pointer = new JsonJoy\Pointer(['a', 'b', '/', 'aga~aga']);
-      $str = $pointer->toString();
-      $this->assertEquals('/a/b/~1/aga~0aga', $str);
+        $pointer = new JsonJoy\Pointer(['a', 'b', '/', 'aga~aga']);
+        $str = $pointer->toString();
+        $this->assertEquals('/a/b/~1/aga~0aga', $str);
     }
 
     public function testEncodesReferenceTokensWhenConvertingToString(): void
     {
-      $pointer = JsonJoy\Pointer::create('/fo~1o/bar~0/~0');
-      $str = $pointer->__toString();
-      $this->assertEquals('/fo~1o/bar~0/~0', $str);
+        $pointer = JsonJoy\Pointer::create('/fo~1o/bar~0/~0');
+        $str = $pointer->__toString();
+        $this->assertEquals('/fo~1o/bar~0/~0', $str);
     }
 }
