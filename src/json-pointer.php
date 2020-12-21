@@ -16,9 +16,15 @@ if (count($argv) < 2) {
     exit(1);
 }
 $pointer = $argv[1];
-$tokens = JsonJoy\Pointer::parse($pointer);
 
-$value = JsonJoy\Pointer::get($tokens, $doc);
-$output = json_encode($value, JSON_PRETTY_PRINT);
+try {
 
-echo $output . "\n";
+    $tokens = JsonJoy\Pointer::parse($pointer);
+    $value = JsonJoy\Pointer::get($tokens, $doc);
+    $output = json_encode($value, JSON_PRETTY_PRINT);
+    
+    fwrite(STDOUT, $output . "\n");
+} catch (\Exception $e) {
+    fwrite(STDERR, $e->getMessage() . "\n");
+    exit(1);
+}
