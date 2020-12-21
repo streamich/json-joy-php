@@ -67,15 +67,15 @@ final class PointerTest extends TestCase
 
     public function testCanEncodeJsonPointerIntoStringForm(): void
     {
-        $pointer = new JsonJoy\Pointer(['a', 'b', '/', 'aga~aga']);
-        $str = $pointer->toString();
+        $pointer = ['a', 'b', '/', 'aga~aga'];
+        $str = JsonJoy\Pointer::format($pointer);
         $this->assertEquals('/a/b/~1/aga~0aga', $str);
     }
 
     public function testEncodesReferenceTokensWhenConvertingToString(): void
     {
-        $pointer = JsonJoy\Pointer::create('/fo~1o/bar~0/~0');
-        $str = $pointer->__toString();
+        $pointer = JsonJoy\Pointer::parse('/fo~1o/bar~0/~0');
+        $str = JsonJoy\Pointer::format($pointer);
         $this->assertEquals('/fo~1o/bar~0/~0', $str);
     }
 
@@ -83,11 +83,11 @@ final class PointerTest extends TestCase
     {
         $str = '{"1": "foo", "2": [1, 2, 3]}';
         $doc = json_decode($str, false);
-        $ptr = JsonJoy\Pointer::create('/1');
-        $val = $ptr->get($doc);
+        $ptr = JsonJoy\Pointer::parse('/1');
+        $val = JsonJoy\Pointer::get($ptr, $doc);
         $this->assertEquals("foo", $val);
-        $ptr = JsonJoy\Pointer::create('/2');
-        $val = $ptr->get($doc);
+        $ptr = JsonJoy\Pointer::parse('/2');
+        $val = JsonJoy\Pointer::get($ptr, $doc);
         $this->assertEquals([1, 2, 3], $val);
     }
 
@@ -95,14 +95,14 @@ final class PointerTest extends TestCase
     {
         $str = '{"1": "foo", "2": [1, 2, 3]}';
         $doc = json_decode($str, false);
-        $ptr = JsonJoy\Pointer::create('/2/0');
-        $val = $ptr->get($doc);
+        $ptr = JsonJoy\Pointer::parse('/2/0');
+        $val = JsonJoy\Pointer::get($ptr, $doc);
         $this->assertEquals(1, $val);
-        $ptr = JsonJoy\Pointer::create('/2/1');
-        $val = $ptr->get($doc);
+        $ptr = JsonJoy\Pointer::parse('/2/1');
+        $val = JsonJoy\Pointer::get($ptr, $doc);
         $this->assertEquals(2, $val);
-        $ptr = JsonJoy\Pointer::create('/2/2');
-        $val = $ptr->get($doc);
+        $ptr = JsonJoy\Pointer::parse('/2/2');
+        $val = JsonJoy\Pointer::get($ptr, $doc);
         $this->assertEquals(3, $val);
     }
 
@@ -112,8 +112,8 @@ final class PointerTest extends TestCase
         $this->expectExceptionMessage('INVALID_INDEX');
         $str = '{"1": "foo", "2": [1, 2, 3]}';
         $doc = json_decode($str, false);
-        $ptr = JsonJoy\Pointer::create('/2/-1');
-        $val = $ptr->get($doc);
+        $ptr = JsonJoy\Pointer::parse('/2/-1');
+        JsonJoy\Pointer::get($ptr, $doc);
     }
 
     public function testThrowsWhenGettingElementOutOfArrayBounds(): void
@@ -122,16 +122,16 @@ final class PointerTest extends TestCase
         $this->expectExceptionMessage('INVALID_INDEX');
         $str = '{"1": "foo", "2": [1, 2, 3]}';
         $doc = json_decode($str, false);
-        $ptr = JsonJoy\Pointer::create('/2/3');
-        $val = $ptr->get($doc);
+        $ptr = JsonJoy\Pointer::parse('/2/3');
+        JsonJoy\Pointer::get($ptr, $doc);
     }
 
     public function testCanGetDocumentRoot(): void
     {
         $str = '{"1": "foo", "2": [1, 2, 3]}';
         $doc = json_decode($str, false);
-        $ptr = JsonJoy\Pointer::create('');
-        $val = $ptr->get($doc);
+        $ptr = JsonJoy\Pointer::parse('');
+        $val = JsonJoy\Pointer::get($ptr, $doc);
         $this->assertEquals($doc, $val);
     }
 }

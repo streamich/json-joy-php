@@ -4,18 +4,27 @@ namespace JsonJoy;
 const SPECIAL_CHARS = ['~', '/'];
 const SPECIAL_CHARS_ESCAPED = ['~0', '~1'];
 
+/**
+ * Implementation of JSON Pointer RFC6901 (https://tools.ietf.org/html/rfc6901).
+ */
 class Pointer
 {
-    public static function create(string $pointer): Pointer
+    public static function parse(string $pointer): array
     {
         if (strlen($pointer) == 0) {
-            return new Pointer([]);
+            return [];
         }
         if ($pointer[0] != '/') {
             throw new \InvalidArgumentException('POINTER_INVALID');
         }
         $referenceTokens = explode('/', substr($pointer, 1));
         $referenceTokens = array_map('JsonJoy\Pointer::unescapeReferenceToken', $referenceTokens);
+        return $referenceTokens;
+    }
+
+    public static function create(string $pointer): Pointer
+    {
+        $referenceTokens = Pointer::parse($pointer);
         return new Pointer($referenceTokens);
     }
 
@@ -29,25 +38,17 @@ class Pointer
         return str_replace(SPECIAL_CHARS_ESCAPED, SPECIAL_CHARS, $token);
     }
 
-    public array $referenceTokens;
-
-    public function __construct(array $referenceTokens)
-    {
-        $this->referenceTokens = $referenceTokens;
+    public static function isRoot(array $tokens): bool {
+        return count($tokens) === 0;
     }
 
-    public function toString(): string
+    public static function format(array $referenceTokens): string
     {
-        if (!count($this->referenceTokens)) {
+        if (!count($referenceTokens)) {
             return '';
         }
-        $referenceTokens = array_map('JsonJoy\Pointer::escapeReferenceToken', $this->referenceTokens);
+        $referenceTokens = array_map('JsonJoy\Pointer::escapeReferenceToken', $referenceTokens);
         return '/' . implode('/', $referenceTokens);
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
     }
 
     public static function convertArrayIndex(string $str, int $maxValue): int
@@ -64,9 +65,9 @@ class Pointer
         return $index;
     }
 
-    public function get($doc)
+    public static function get(array $referenceTokens, $doc)
     {
-        foreach ($this->referenceTokens as &$token) {
+        foreach ($referenceTokens as $token) {
             if (is_object($doc)) {
                 if (!property_exists($doc, $token)) {
                     throw new \Exception('NOT_FOUND');
