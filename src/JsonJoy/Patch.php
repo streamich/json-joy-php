@@ -3,8 +3,9 @@ namespace JsonJoy;
 
 class Patch
 {
-    public static function createOps(array $operations): array {
-        if(!is_array($operations)) {
+    public static function createOps(array $operations): array
+    {
+        if (!is_array($operations)) {
             throw new \Exception('PATCH_INVALID');
         }
         $ops = [];
@@ -14,7 +15,8 @@ class Patch
         return $ops;
     }
 
-    public static function createOp(object $operation): object {
+    public static function createOp(object $operation): object
+    {
         if (!is_object($operation)) {
             throw new \Exception('OP_INVALID');
         }
@@ -42,7 +44,8 @@ class Patch
         throw new \Exception('OP_UNKNOWN');
     }
 
-    private static function createAddOp($operation): Patch\OpAdd {
+    private static function createAddOp($operation): Patch\OpAdd
+    {
         if (!property_exists($operation, 'path')) {
             throw new \Exception('OP_PATH_INVALID');
         }
@@ -57,7 +60,8 @@ class Patch
         return new Patch\OpAdd($path, $value);
     }
 
-    private static function createReplaceOp($operation): Patch\OpReplace {
+    private static function createReplaceOp($operation): Patch\OpReplace
+    {
         if (!property_exists($operation, 'path')) {
             throw new \Exception('OP_PATH_INVALID');
         }
@@ -72,7 +76,8 @@ class Patch
         return new Patch\OpReplace($path, $value);
     }
 
-    private static function createRemoveOp($operation): Patch\OpRemove {
+    private static function createRemoveOp($operation): Patch\OpRemove
+    {
         if (!property_exists($operation, 'path')) {
             throw new \Exception('OP_PATH_INVALID');
         }
@@ -83,7 +88,8 @@ class Patch
         return new Patch\OpRemove($path);
     }
 
-    private static function createTestOp($operation): Patch\OpTest {
+    private static function createTestOp($operation): Patch\OpTest
+    {
         if (!property_exists($operation, 'path')) {
             throw new \Exception('OP_PATH_INVALID');
         }
@@ -98,7 +104,8 @@ class Patch
         return new Patch\OpTest($path, $value);
     }
 
-    private static function createMoveOp($operation): Patch\OpMove {
+    private static function createMoveOp($operation): Patch\OpMove
+    {
         if (!property_exists($operation, 'path')) {
             throw new \Exception('OP_PATH_INVALID');
         }
@@ -116,7 +123,8 @@ class Patch
         return new Patch\OpMove($path, $from);
     }
 
-    private static function createCopyOp($operation): Patch\OpCopy {
+    private static function createCopyOp($operation): Patch\OpCopy
+    {
         if (!property_exists($operation, 'path')) {
             throw new \Exception('OP_PATH_INVALID');
         }

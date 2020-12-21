@@ -3,19 +3,22 @@ namespace JsonJoy\Patch;
 
 use JsonJoy;
 
-class OpReplace {
+class OpReplace
+{
     public string $path;
     public $value;
 
     public array $pathTokens;
 
-    public function __construct(string $path, $value) {
+    public function __construct(string $path, $value)
+    {
         $this->path = $path;
         $this->value = $value;
         $this->pathTokens = JsonJoy\Pointer::parse($path);
     }
 
-    public function apply($doc) {
+    public function apply($doc)
+    {
         $tokenCount = count($this->pathTokens);
         if (!$tokenCount) {
             return JsonJoy\Json::copy($this->value);
@@ -38,13 +41,15 @@ class OpReplace {
             }
             $valueCopy = JsonJoy\Json::copy($this->value);
             $obj[$index] = $valueCopy;
-            if ($tokenCount === 1) return $obj;
+            if ($tokenCount === 1) {
+                return $obj;
+            }
             $parentParentTokens = array_slice($this->pathTokens, 0, $tokenCount - 2);
             $parentLastToken = $this->pathTokens[$tokenCount - 2];
             $parentObj = JsonJoy\Pointer::get($parentParentTokens, $doc);
             if (is_object($parentObj)) {
                 $parentObj->$parentLastToken = $obj;
-            } else if (is_array($parentObj)) {
+            } elseif (is_array($parentObj)) {
                 $parentObj[$parentLastToken] = $obj;
             }
             return $doc;

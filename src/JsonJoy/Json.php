@@ -5,7 +5,7 @@ namespace JsonJoy;
  * Implements utility methods on JSON for json-joy. json-joy uses associative
  * arrays to represent JSON arrays, and std objects to represent JSON objects.
  * Provide `true` as second argument of `json_decode`.
- * 
+ *
  * ```php
  * $doc = json_decode($json, false);
  * ```

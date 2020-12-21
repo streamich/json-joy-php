@@ -3,8 +3,10 @@ namespace JsonJoy\Patch;
 
 use JsonJoy;
 
-class OpRemove {
-    public static function applyRemove($doc, array $pathTokens) {
+class OpRemove
+{
+    public static function applyRemove($doc, array $pathTokens)
+    {
         $tokenCount = count($pathTokens);
         if (!$tokenCount) {
             return [null, $doc];
@@ -24,13 +26,15 @@ class OpRemove {
             $index = JsonJoy\Pointer::convertArrayIndex($lastToken, count($obj) - 1);
             $value = $obj[$index];
             array_splice($obj, $index, 1);
-            if ($tokenCount === 1) return [$obj, $value];
+            if ($tokenCount === 1) {
+                return [$obj, $value];
+            }
             $parentParentTokens = array_slice($pathTokens, 0, $tokenCount - 2);
             $parentLastToken = $pathTokens[$tokenCount - 2];
             $parentObj = JsonJoy\Pointer::get($parentParentTokens, $doc);
             if (is_object($parentObj)) {
                 $parentObj->$parentLastToken = $obj;
-            } else if (is_array($parentObj)) {
+            } elseif (is_array($parentObj)) {
                 $parentObj[$parentLastToken] = $obj;
             }
             return [$doc, $value];
@@ -43,12 +47,14 @@ class OpRemove {
 
     public array $pathTokens;
 
-    public function __construct(string $path) {
+    public function __construct(string $path)
+    {
         $this->path = $path;
         $this->pathTokens = JsonJoy\Pointer::parse($path);
     }
 
-    public function apply($doc) {
+    public function apply($doc)
+    {
         $tuple = OpRemove::applyRemove($doc, $this->pathTokens);
         return $tuple[0];
     }

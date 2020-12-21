@@ -38,7 +38,8 @@ class Pointer
         return str_replace(SPECIAL_CHARS_ESCAPED, SPECIAL_CHARS, $token);
     }
 
-    public static function isRoot(array $tokens): bool {
+    public static function isRoot(array $tokens): bool
+    {
         return count($tokens) === 0;
     }
 
