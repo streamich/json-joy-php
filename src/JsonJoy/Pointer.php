@@ -17,6 +17,10 @@ class Pointer
         return new Pointer($referenceTokens);
     }
 
+    public static function escapeReferenceToken(string $token): string {
+      return str_replace(['~', '/'], ['~0', '~1'], $token);
+    }
+
     public array $referenceTokens;
 
     public function __construct(array $referenceTokens)
