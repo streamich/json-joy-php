@@ -2,13 +2,24 @@
     "name": "streamich/json-joy",
     "description": "JSON Pointer, JSON Patch and JSON Operation Transformations in native PHP",
     "type": "library",
-    "require": {
-        "phpunit/phpunit": "^9.5"
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "friendsofphp/php-cs-fixer": "^2.17"
     },
     "authors": [
         {
             "name": "streamich",
             "email": "streamich@gmail.com"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit tests/unit",
+        "cs-fix": "php-cs-fixer fix . -vv || true",
+        "cs-lint": "php-cs-fixer fix --diff --stop-on-violation --verbose --dry-run"
+    }
 }
