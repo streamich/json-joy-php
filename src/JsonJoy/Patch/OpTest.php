@@ -1,4 +1,5 @@
 <?php
+
 namespace JsonJoy\Patch;
 
 use JsonJoy;

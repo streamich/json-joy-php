@@ -1,4 +1,5 @@
 <?php
+
 namespace JsonJoy;
 
 class Patch
@@ -49,6 +50,8 @@ class Patch
                 return Patch::createCopyOp($operation);
             case 'test':
                 return Patch::createTestOp($operation);
+            case 'str_ins':
+                return Patch::createStrInsOp($operation);
         }
         throw new \Exception('OP_UNKNOWN');
     }
@@ -149,5 +152,28 @@ class Patch
             throw new \Exception('OP_FROM_INVALID');
         }
         return new Patch\OpCopy($path, $from);
+    }
+
+    private static function createStrInsOp($operation): Patch\OpStrIns
+    {
+        if (!property_exists($operation, 'path')) {
+            throw new \Exception('OP_PATH_INVALID');
+        }
+        $path = $operation->path;
+        if (!is_string($path)) {
+            throw new \Exception('OP_PATH_INVALID');
+        }
+        if (!property_exists($operation, 'pos')) {
+            throw new \Exception('OP_INVALID');
+        }
+        $pos = (int)$operation->pos;
+        if (!property_exists($operation, 'str')) {
+            throw new \Exception('OP_INVALID');
+        }
+        $str = $operation->str;
+        if (!is_string($str)) {
+            throw new \Exception('OP_INVALID');
+        }
+        return new Patch\OpStrIns($path, $pos, $str);
     }
 }
