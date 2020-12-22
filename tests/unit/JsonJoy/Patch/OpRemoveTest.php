@@ -31,7 +31,7 @@ final class OpRemoveTest extends TestCase
     public function testThrowsWhenRemovingElementFromArrayOutOfBounds(): void
     {
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('INVALID_INDEX');
+        $this->expectExceptionMessage('NOT_FOUND');
         $op = new JsonJoy\Patch\OpRemove("/3");
         $doc = [1, 2];
         $op->apply($doc);

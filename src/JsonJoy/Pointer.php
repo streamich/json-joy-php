@@ -52,6 +52,9 @@ class Pointer
     public static function convertArrayIndex(string $str, int $maxValue): int
     {
         $index = (int)$str;
+        if (((string)$index) !== $str) {
+            throw new \Exception('INVALID_INDEX');
+        }
         if ($index < 0) {
             throw new \Exception('INVALID_INDEX');
         }
@@ -63,14 +66,14 @@ class Pointer
         return $index;
     }
 
-    public static function get(array $referenceTokens, $doc)
+    public static function &get(array &$referenceTokens, &$doc)
     {
         foreach ($referenceTokens as $token) {
             if (is_object($doc)) {
                 if (!property_exists($doc, $token)) {
                     throw new \Exception('NOT_FOUND');
                 }
-                $doc = $doc->$token;
+                $doc = &$doc->$token;
                 continue;
             }
             if (is_array($doc)) {
@@ -78,7 +81,7 @@ class Pointer
                 if (!array_key_exists($index, $doc)) {
                     throw new \Exception('NOT_FOUND');
                 }
-                $doc = $doc[$token];
+                $doc = &$doc[$token];
                 continue;
             }
             throw new \Exception('NOT_FOUND');

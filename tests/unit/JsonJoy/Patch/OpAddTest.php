@@ -76,4 +76,27 @@ final class OpAddTest extends TestCase
             ],
         ], $result);
     }
+
+    public function testAddDeeplyAtTheEndOfArray(): void
+    {
+        $op = new JsonJoy\Patch\OpAdd("/2/1/-", 'gg');
+        $doc = [
+            1,
+            2,
+            [
+                3,
+                [4, 5],
+            ],
+        ];
+        $result = JsonJoy\Patch\OpAdd::applyAdd($doc, $op->pathTokens, $op->value);
+        $expected = [
+            1,
+            2,
+            [
+                3,
+                [4, 5, 'gg'],
+            ],
+        ];
+        $this->assertEquals($expected, $result);
+    }
 }

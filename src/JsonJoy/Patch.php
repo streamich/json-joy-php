@@ -63,7 +63,7 @@ class Patch
             throw new \Exception('OP_PATH_INVALID');
         }
         if (!property_exists($operation, 'value')) {
-            throw new \Exception('OP_VALUE_INVALID');
+            throw new \Exception('OP_VALUE_MISSING');
         }
         $value = $operation->value;
         return new Patch\OpAdd($path, $value);
@@ -79,7 +79,7 @@ class Patch
             throw new \Exception('OP_PATH_INVALID');
         }
         if (!property_exists($operation, 'value')) {
-            throw new \Exception('OP_VALUE_INVALID');
+            throw new \Exception('OP_VALUE_MISSING');
         }
         $value = $operation->value;
         return new Patch\OpReplace($path, $value);
@@ -107,7 +107,7 @@ class Patch
             throw new \Exception('OP_PATH_INVALID');
         }
         if (!property_exists($operation, 'value')) {
-            throw new \Exception('OP_VALUE_INVALID');
+            throw new \Exception('OP_VALUE_MISSING');
         }
         $value = $operation->value;
         return new Patch\OpTest($path, $value);

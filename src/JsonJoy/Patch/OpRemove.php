@@ -13,7 +13,7 @@ class OpRemove
         }
         $parentTokens = array_slice($pathTokens, 0, $tokenCount - 1);
         $lastToken = $pathTokens[$tokenCount - 1];
-        $obj = JsonJoy\Pointer::get($parentTokens, $doc);
+        $obj = &JsonJoy\Pointer::get($parentTokens, $doc);
         if (is_object($obj)) {
             if (!property_exists($obj, $lastToken)) {
                 throw new \Exception('NOT_FOUND');
@@ -23,20 +23,12 @@ class OpRemove
             return [$doc, $value];
         }
         if (is_array($obj)) {
-            $index = JsonJoy\Pointer::convertArrayIndex($lastToken, count($obj) - 1);
+            $index = JsonJoy\Pointer::convertArrayIndex($lastToken, -1);
+            if (count($obj) <= $index) {
+                throw new \Exception('NOT_FOUND');
+            }
             $value = $obj[$index];
             array_splice($obj, $index, 1);
-            if ($tokenCount === 1) {
-                return [$obj, $value];
-            }
-            $parentParentTokens = array_slice($pathTokens, 0, $tokenCount - 2);
-            $parentLastToken = $pathTokens[$tokenCount - 2];
-            $parentObj = JsonJoy\Pointer::get($parentParentTokens, $doc);
-            if (is_object($parentObj)) {
-                $parentObj->$parentLastToken = $obj;
-            } elseif (is_array($parentObj)) {
-                $parentObj[$parentLastToken] = $obj;
-            }
             return [$doc, $value];
         }
         throw new \Exception('NOT_FOUND');
