@@ -24,4 +24,24 @@ final class OpStrInsTest extends TestCase
             'foo' => 'asggdf',
         ], $result);
     }
+
+    public function testCanInsertIntoEmptyString(): void
+    {
+        $op = new JsonJoy\Patch\OpStrIns("/foo", 0, 'abc');
+        $doc = (object) [
+            'foo' => '',
+        ];
+        $result = $op->apply($doc);
+        $this->assertEquals((object) [
+            'foo' => 'abc',
+        ], $result);
+    }
+
+    public function testCanInsertIntoEmptyStringAtRoot(): void
+    {
+        $op = new JsonJoy\Patch\OpStrIns("", 0, 'abc');
+        $doc = '';
+        $result = $op->apply($doc);
+        $this->assertEquals('abc', $result);
+    }
 }

@@ -33,7 +33,7 @@ class OpStrIns
         return str_ins($str, $this->pos, $this->str);
     }
 
-    public function &apply(&$doc)
+    public function apply(&$doc)
     {
         $tokenCount = count($this->pathTokens);
         if (!$tokenCount) {
@@ -43,7 +43,15 @@ class OpStrIns
         $lastToken = $this->pathTokens[$tokenCount - 1];
         $obj = &JsonJoy\Pointer::get($parentTokens, $doc);
         if (is_object($obj)) {
-            $obj->$lastToken = $this->str($obj->$lastToken);
+            if (!property_exists($obj, $lastToken)) {
+                if ($this->pos === 0) {
+                    $obj->$lastToken = $this->str('');
+                } else {
+                    throw new \Exception('POS');
+                }
+            } else {
+                $obj->$lastToken = $this->str($obj->$lastToken);
+            }
             return $doc;
         }
         if (is_array($obj)) {
