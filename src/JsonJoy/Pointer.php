@@ -7,6 +7,12 @@ namespace JsonJoy;
  */
 class Pointer
 {
+    public function __construct(array $referenceTokens)
+    {
+        // This class is called as new Pointer($referenceTokens)
+        // so it needs a constructor.
+    }
+
     public static function parse(string $pointer): array
     {
         if (strlen($pointer) == 0) {
