@@ -20,8 +20,8 @@
     "scripts": {
         "test:all": "composer test && composer test:pointer && composer test:patch",
         "test": "vendor/bin/phpunit --colors=auto tests/unit",
-        "test:pointer": "npx -p json-joy@2.4.0 json-pointer-test ./bin/json-pointer.php",
-        "test:patch": "npx -p json-joy@2.4.0 json-patch-test ./bin/json-patch.php",
+        "test:pointer": "npx -p json-joy@2.4.0 json-pointer-test ./cli/json-pointer.php",
+        "test:patch": "npx -p json-joy@2.4.0 json-patch-test ./cli/json-patch.php",
         "fix": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix . -vv || true"
     }
 }
